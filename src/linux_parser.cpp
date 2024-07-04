@@ -9,7 +9,7 @@ using std::stof;
 using std::string;
 using std::to_string;
 using std::vector;
-
+//using namespace std;
 // DONE: An example of how to read data from the filesystem
 string LinuxParser::OperatingSystem() {
   string line;
@@ -86,7 +86,29 @@ long LinuxParser::ActiveJiffies() { return 0; }
 long LinuxParser::IdleJiffies() { return 0; }
 
 // TODO: Read and return CPU utilization
-vector<string> LinuxParser::CpuUtilization() { return {}; }
+vector<string> LinuxParser::CpuUtilization() 
+{ 
+  std::vector<string> cpu_utilization;
+  std::string line, cpu_text;
+  std::ifstream filestream(kProcDirectory + kStatFilename);
+  if (filestream.is_open())
+  {
+    while(getline(filestream, line))
+    {
+      std::istringstream line_stream(line);
+      while(std::getline(line_stream, cpu_text, ' '))
+      {
+        cpu_utilization.push_back(cpu_text);
+      }
+      if (cpu_utilization[0] == "cpu")
+        {
+          return cpu_utilization;
+        }
+    }
+  }
+
+  return {};
+}
 
 // TODO: Read and return the total number of processes
 int LinuxParser::TotalProcesses() { return 0; }
